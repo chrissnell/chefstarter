@@ -1,5 +1,5 @@
 # chefstarter
-Launch chef-client remotely, with HTTP Basic Auth and TLS support.
+Launch chef-client remotely, with HTTP Basic Auth and TLS support.  Written in Go.
 
 ## Why
 I run a technical operations team responsible for over 400 Linux instances that are provisioned by Chef. We regularly find ourselves needing to invoke a chef-client run manually across a large number of machines.  Before `chefstarter`, we used [dsh](http://sourceforge.net/projects/dsh/) to SSH into the instances and kick off `chef-client`.  This technique has several disadvanteges:
@@ -33,3 +33,7 @@ I recommend that you use the `-path` setting to specify a secret path that will 
 
 ## Firewalling
 I recommend that you use firewall ACLs to restrict access to chefstarter's TCP port.
+
+
+## Author
+`chefstarter` was created by [Chris Snell](http://output.chrissnell.com)
