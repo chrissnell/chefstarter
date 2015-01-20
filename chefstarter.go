@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"os/exec"
 )
 
@@ -25,16 +26,21 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	user, pass, authorized := r.BasicAuth()
 
 	if user != *username || pass != *password {
-		log.Println("Client", r.RemoteAddr, "failed HTTP basic authentication. Username:", user, "Password:", pass)
+		log.Println("chefstarter ERROR: Client", r.RemoteAddr, "failed HTTP basic authentication. Username:", user, "Password:", pass)
 		http.Error(w, "Invalid username/password combination", 403)
 	}
 
 	if authorized {
 		log.Println("Launched chef-client by request of", r.RemoteAddr)
 
-		cmd := exec.Command("sudo", "chef-client")
+		//cmd := exec.Command("sudo", "chef-client")
 		// For testing chef-client exit codes...
-		// cmd := exec.Command("./error.sh")
+		cmd := exec.Command("./error.sh")
+
+		// Send chef-client's stdout and stderr to chefstarter's stdout and stderr.
+		// If running from supervisord, for example, this can be collected and logged.
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
 
 		if *synch {
 			err = cmd.Run()
@@ -43,7 +49,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		}
 		if err != nil {
 			friendlyErr := "Error executing chef-client: " + err.Error()
-			log.Println("ERROR: chef-client execution returned error", err.Error())
+			log.Println("chefstarter ERROR: chef-client execution returned error", err.Error())
 			http.Error(w, friendlyErr, 500)
 		}
 		fmt.Fprintf(w, "chef-client launched")
@@ -77,7 +83,7 @@ func main() {
 
 		err := http.ListenAndServeTLS(*listen, *crtfile, *keyfile, nil)
 		if err != nil {
-			log.Println("ERROR:", err)
+			log.Println("chefstarter ERROR:", err)
 		}
 
 	} else {
