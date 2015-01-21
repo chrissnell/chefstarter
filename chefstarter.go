@@ -39,8 +39,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		log.Println("Launching", *command, "by request of", r.RemoteAddr)
 
 		cmd := exec.Command(splitCommand[0], splitCommand[1:]...)
-		// For testing chef-client exit codes...
-		// cmd := exec.Command("./error.sh")
 
 		// Send chef-client's stdout and stderr to chefstarter's stdout and stderr.
 		// If running from supervisord, for example, this can be collected and logged.
