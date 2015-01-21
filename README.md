@@ -15,14 +15,15 @@ I run a technical operations team responsible for over 400 Linux instances that 
 ```
 ./chefstarter -h
 Usage of ./chefstarter:
+  -cert="": HTTPS X.509 Public Certificate file
+  -command="sudo chef-client": Command to execute upon successful authentication (Default: 'sudo chef-client')
+  -key="": HTTPS X.509 Private Key file
   -listen=":7100": IP:port to listen on (Default: listen on all interfaces on port 7100)
-  -wait=false: Wait until chef-client completes run before returning HTTP response
-  -user="chefstarter": HTTP Basic Auth username (Default: chefstarter)
   -pass="": HTTP Basic Auth password
   -path="/": Request path to initiate chef-client run (Default: /)
   -ssl=false: Enable HTTPS (true/false)
-  -cert="": HTTPS X.509 Public Certificate file
-  -key="": HTTPS X.509 Private Key file
+  -user="chefstarter": HTTP Basic Auth username (Default: chefstarter)
+  -wait=false: Wait until chef-client completes run before returning HTTP response
 ```
 
 ## Synchronous vs Asynchronous Operation
