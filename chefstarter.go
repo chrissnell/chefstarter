@@ -7,9 +7,11 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 var (
+	command  *string
 	path     *string
 	synch    *bool
 	username *string
@@ -32,9 +34,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		// HTTP Basic Auth succeeded, so we continue...
 
-		log.Println("Launching chef-client by request of", r.RemoteAddr)
+		splitCommand := strings.Split(*command, " ")
 
-		cmd := exec.Command("sudo", "chef-client")
+		log.Println("Launching", *command, "by request of", r.RemoteAddr)
+
+		cmd := exec.Command(splitCommand[0], splitCommand[1:]...)
 		// For testing chef-client exit codes...
 		// cmd := exec.Command("./error.sh")
 
@@ -65,6 +69,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	command = flag.String("command", "sudo chef-client", "Command to execute upon successful authentication (Default: 'sudo chef-client')")
 	path = flag.String("path", "/", "Request path to initiate chef-client run (Default: /)")
 	synch = flag.Bool("wait", false, "Wait until chef-client completes run before returning HTTP response")
 	username = flag.String("user", "chefstarter", "HTTP Basic Auth username (Default: chefstarter)")
