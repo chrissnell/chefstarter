@@ -59,8 +59,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, friendlyErr, 500)
 		}
 
-		// chef-client ran properly so return a friendly message to the client
-		fmt.Fprintf(w, "chef-client launched")
+		// Our command ran properly so return a friendly message to the client
+		fmt.Fprintln(w, *command, "launched")
 		return
 	}
 	return
