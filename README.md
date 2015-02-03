@@ -1,5 +1,5 @@
 # chefstarter
-Launch chef-client (or puppet, or...) remotely, with HTTP Basic Auth and TLS support.  Written in Go.
+A cURL-able chef-client (or puppet, or...) launcher.  Launch chef-client remotely with HTTP Basic Auth and TLS support.  Written in Go.
 
 ## Why
 I run a technical operations team responsible for over 400 Linux instances that are provisioned by Chef. We regularly find ourselves needing to invoke a chef-client run manually across a large number of machines.  Before `chefstarter`, we used [dsh](http://sourceforge.net/projects/dsh/) to SSH into the instances and kick off `chef-client`.  This technique has several disadvanteges:
