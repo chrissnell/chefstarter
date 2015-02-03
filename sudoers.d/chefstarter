@@ -1,0 +1,1 @@
+%chefstarter  ALL=(root) NOPASSWD:/usr/bin/chef-client
