@@ -9,7 +9,7 @@ I run a technical operations team responsible for over 400 Linux instances that 
 * If you manage large numbers of nodes, your SSH host keys are continually being added/changed, so you have to either pre-add them (painful) or be prepared to accept new keys manually when they come along.
 
 ## How
-`chefstarter` does one thing and one thing only: it launches `chef-client` when an authenticated HTTP request is made to a pre-arranged URL path.  You run it as a daemon (preferably under something like [supervisord](http://supervisord.org/).  You run it as a non-root user with `sudo` NOPASSWD access to execute `chef-client` (and *only* `chef-client`)
+`chefstarter` does one thing and one thing only: it launches `chef-client` when an authenticated HTTP request is made to a pre-arranged URL path.  You run it as a daemon (preferably under something like [supervisord](http://supervisord.org/).  You run it as a non-root user with `sudo` NOPASSWD access to execute `chef-client` (and *only* `chef-client`).   See example supervisord and sudoers files in this repository.
 
 ## Command-line Flags
 ```
