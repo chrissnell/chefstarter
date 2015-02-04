@@ -42,13 +42,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		cmd := exec.Command(splitCommand[0], splitCommand[1:]...)
 
-		// If the request method was POST, we copy the command output
-		// to the HTTP client as well.
-		switch r.Method {
-		case "POST":
+		// If the request method was POST and we're running in synchronous mode,
+		// we copy the command output to the HTTP client as well.
+		if r.Method == "POST" && *synch {
 			commandStdout = io.MultiWriter(os.Stdout, w)
 			commandStderr = io.MultiWriter(os.Stderr, w)
-		default:
+		} else {
 			commandStdout = os.Stdout
 			commandStderr = os.Stderr
 		}
