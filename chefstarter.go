@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -24,6 +25,7 @@ var (
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	var err error
+	var commandStdout, commandStderr io.Writer
 
 	// Pull creds that were passed through HTTP Basic Authentication
 	user, pass, _ := r.BasicAuth()
@@ -40,10 +42,22 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		cmd := exec.Command(splitCommand[0], splitCommand[1:]...)
 
-		// Send chef-client's stdout and stderr to chefstarter's stdout and stderr.
-		// If running from supervisord, for example, this can be collected and logged.
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
+		// If the request method was POST, we copy the command output
+		// to the HTTP client as well.
+		switch r.Method {
+		case "POST":
+			commandStdout = io.MultiWriter(os.Stdout, w)
+			commandStderr = io.MultiWriter(os.Stderr, w)
+		default:
+			commandStdout = os.Stdout
+			commandStderr = os.Stderr
+		}
+
+		// Send chef-client's stdout and stderr to chefstarter's stdout and stderr
+		// and, if the request is a POST, to the HTTP client as well.
+		// If running from supervisord, for example, stdout/stderr can be collected and logged.
+		cmd.Stdout = commandStdout
+		cmd.Stderr = commandStderr
 
 		if *synch {
 			// If we're running synchronously, block on execution and wait for chef-client to finish
